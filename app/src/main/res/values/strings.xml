@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Book Store</string>
+
+    <!-- editor activity title -->
+    <string name="new_book_title">Add new book</string>
+    <string name="edit_book_title">Edit book</string>
+
+    <!-- toast massage -->
+    <string name="complete_the_form">All data must be completed. Add a new book once</string>
+    <string name="order_books">Quantity of books = 0. Order books</string>
+    <string name="add_books">Catalog is emtphy. Add books</string>
+    <string name="editor_insert_book_successful">Book saved</string>
+    <string name="editor_insert_book_failed">Error with saving book</string>
+    <string name="editor_update_book_successful">Book updated</string>
+    <string name="editor_update_book_failed">Error with updating book</string>
+    <string name="editor_delete_book_successful">Book deleted</string>
+    <string name="editor_delete_book_failed">Error with deleting book</string>
+
+    <!-- dialog massage -->
+    <string name="unsaved_changes_dialog_msg">Discard your changes and quit editing?</string>
+    <string name="discard">Discard</string>
+    <string name="keep_editing">Keep Editing</string>
+    <string name="delete_dialog_msg">Delete this book?</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- button text -->
+    <string name="button_sell">sell</string>
+
+    <!-- editor text views -->
+    <string name="book_name_text">Book title: </string>
+    <string name="author_book_name_text">Author book name: </string>
+    <string name="price_text">Price: </string>
+    <string name="quantity_text">Quantity: </string>
+    <string name="supplier_name_text">Supplier name: </string>
+    <string name="supplier_phone_number_text">Supplier phone number: </string>
+</resources>
