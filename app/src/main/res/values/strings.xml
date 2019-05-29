@@ -34,4 +34,19 @@
     <string name="quantity_text">Quantity: </string>
     <string name="supplier_name_text">Supplier name: </string>
     <string name="supplier_phone_number_text">Supplier phone number: </string>
+    <string name="title_activity_log_in">Sign in</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="login_error_message">Login Faild</string>
+    <string name="login_error_title">Failure</string>
+    <string name="title_activity_login2">Sign in</string>
+    <string name="signup_error_message">Sign up error</string>
+    <string name="signup_error_title">Sign up error</string>
+    <string name="registre_clic_here">To register click here</string>
 </resources>

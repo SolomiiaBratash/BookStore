@@ -3,8 +3,11 @@
     package="com.example.android.bookstore">
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-feature android:name="android.hardware.camera"
+
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="true" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -12,8 +15,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".CatalogActivity">
+        
+        <activity android:name=".LogInActivity" android:label="@string/title_activity_log_in"/>
+        <activity android:name=".SignUpActivity"/>
+        <activity android:name=".CatalogActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,11 +27,12 @@
         </activity>
         <activity
             android:name=".EditorActivity"
-            android:parentActivityName=".CatalogActivity" >
+            android:parentActivityName=".CatalogActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".CatalogActivity" />
         </activity>
+
         <provider
             android:name=".data.BookProvider"
             android:authorities="com.example.android.bookstore"
