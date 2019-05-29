@@ -6,10 +6,14 @@ import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
 
 import com.example.android.bookstore.data.BookContract.BookEntry;
+
+import java.io.ByteArrayOutputStream;
 
 public class BookProvider extends ContentProvider {
 
@@ -54,6 +58,8 @@ public class BookProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Cannot query unknown URI " + uri);
         }
+
+
 
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
@@ -101,7 +107,15 @@ public class BookProvider extends ContentProvider {
             throw new IllegalArgumentException("Book requires a supplier phone number");
         }
 
+        byte[] img = values.getAsByteArray(BookEntry.COLUMN_BOOK_IMAGE);
+        if (img == null) {
+            Log.d(LOG_TAG, "Image dont set");
+        }
+
+
+
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
+
 
         long id = database.insert(BookEntry.TABLE_NAME, null, values);
 
@@ -175,6 +189,13 @@ public class BookProvider extends ContentProvider {
             }
         }
 
+//        if (values.containsKey(BookEntry.COLUMN_BOOK_IMAGE)) {
+//            String phoneNumber = values.getAsString(BookEntry.COLUMN_BOOK_IMAGE);
+//            if (phoneNumber == null) {
+//                throw new IllegalArgumentException("Book requires a supplier image");
+//            }
+//        }
+
         if (values.size() == 0) {
             return 0;
         }
@@ -228,4 +249,23 @@ public class BookProvider extends ContentProvider {
                 throw new IllegalStateException("Unknown URI " + uri + " with match " + match);
         }
     }
+
+
+//
+//    public Bitmap getImage(int i){
+//
+//        String qu = "select img  from table where feedid=" + i ;
+//        Cursor cur = db.rawQuery(qu, null);
+//
+//        if (cur.moveToFirst()){
+//            byte[] imgByte = cur.getBlob(0);
+//            cur.close();
+//            return BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length);
+//        }
+//        if (cur != null && !cur.isClosed()) {
+//            cur.close();
+//        }
+//
+//        return null;
+//    }
 }

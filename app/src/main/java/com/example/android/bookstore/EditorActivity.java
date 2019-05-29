@@ -8,11 +8,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatImageButton;
+import android.support.v7.widget.AppCompatImageView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -22,6 +30,9 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.android.bookstore.data.BookContract.BookEntry;
+
+import java.io.ByteArrayOutputStream;
+import java.util.Locale;
 
 public class EditorActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
@@ -39,6 +50,8 @@ public class EditorActivity extends AppCompatActivity implements
     private ImageButton mMinButton;
     private ImageButton mAddButton;
     private ImageButton mPhoneButton;
+    private ImageButton mImageButton;
+    private AppCompatImageView mImageView;
 
     private boolean mBookHasChanged = false;
 
@@ -67,6 +80,8 @@ public class EditorActivity extends AppCompatActivity implements
         mMinButton = (ImageButton) findViewById(R.id.button_min);
         mAddButton = (ImageButton) findViewById(R.id.button_add);
         mPhoneButton = (ImageButton) findViewById(R.id.button_phone);
+        mImageButton = (ImageButton) findViewById(R.id.btnMakePhoto);
+        mImageView = (AppCompatImageView) findViewById(R.id.ivImage);
 
         if (mCurrentBookUri == null) {
             setTitle(getString(R.string.new_book_title));
@@ -85,6 +100,7 @@ public class EditorActivity extends AppCompatActivity implements
         mQuantityEditText.setOnTouchListener(mTouchListener);
         mSupplierEditText.setOnTouchListener(mTouchListener);
         mPhoneNumberEditText.setOnTouchListener(mTouchListener);
+        mImageButton.setOnTouchListener(mTouchListener);
 
         mMinButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,6 +135,32 @@ public class EditorActivity extends AppCompatActivity implements
                 dialPhoneNumber(phone);
             }
         });
+
+        mImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dispatchTakePictureIntent();
+            }
+        });
+
+    }
+
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            mImageView.setImageBitmap(imageBitmap);
+        }
     }
 
     public void dialPhoneNumber(String phoneNumber) {
@@ -137,6 +179,10 @@ public class EditorActivity extends AppCompatActivity implements
         String supplierString = mSupplierEditText.getText().toString().trim();
         String phoneString = mPhoneNumberEditText.getText().toString().trim();
 
+        Bitmap bitmap = ((BitmapDrawable) mImageView.getDrawable()).getBitmap();
+
+        byte[] image = getBitmapAsByteArray(bitmap);
+
         if (mCurrentBookUri == null &&
                 TextUtils.isEmpty(nameString) || TextUtils.isEmpty(authorString) ||
                 TextUtils.isEmpty(priceString) || TextUtils.isEmpty(quantityString) ||
@@ -152,6 +198,7 @@ public class EditorActivity extends AppCompatActivity implements
         values.put(BookEntry.COLUMN_BOOK_QUANTITY, quantityString);
         values.put(BookEntry.COLUMN_BOOK_SUPPLIER_NAME, supplierString);
         values.put(BookEntry.COLUMN_BOOK_PHONE_NUMBER, phoneString);
+        values.put(BookEntry.COLUMN_BOOK_IMAGE, image);
 
         if (mCurrentBookUri == null) {
             Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, values);
@@ -169,6 +216,12 @@ public class EditorActivity extends AppCompatActivity implements
             }
         }
         finish();
+    }
+
+    public static byte[] getBitmapAsByteArray(Bitmap bitmap) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+        return outputStream.toByteArray();
     }
 
     @Override
@@ -244,7 +297,8 @@ public class EditorActivity extends AppCompatActivity implements
                 BookEntry.COLUMN_BOOK_PRICE,
                 BookEntry.COLUMN_BOOK_QUANTITY,
                 BookEntry.COLUMN_BOOK_SUPPLIER_NAME,
-                BookEntry.COLUMN_BOOK_PHONE_NUMBER };
+                BookEntry.COLUMN_BOOK_PHONE_NUMBER,
+                BookEntry.COLUMN_BOOK_IMAGE};
 
         return new CursorLoader(this,
                 mCurrentBookUri,
@@ -267,14 +321,17 @@ public class EditorActivity extends AppCompatActivity implements
             int quantityColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_BOOK_QUANTITY);
             int supplierColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_BOOK_SUPPLIER_NAME);
             int phoneColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_BOOK_PHONE_NUMBER);
+            int imageColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_BOOK_IMAGE);
 
             String name = cursor.getString(nameColumnIndex);
             String author = cursor.getString(authorColumnIndex);
             Float fPrice = cursor.getFloat(priceColumnIndex);
-            String price = String.format("%.02f", fPrice);
+            String price = String.format(Locale.ENGLISH,"%.02f", fPrice);
             int quantity = cursor.getInt(quantityColumnIndex);
             String supplier = cursor.getString(supplierColumnIndex);
             String phone = cursor.getString(phoneColumnIndex);
+            byte[] imgByte = cursor.getBlob(imageColumnIndex);
+            Bitmap img = BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length);
 
             mNameEditText.setText(name);
             mAuthorEditText.setText(author);
@@ -282,6 +339,7 @@ public class EditorActivity extends AppCompatActivity implements
             mQuantityEditText.setText(Integer.toString(quantity));
             mSupplierEditText.setText(supplier);
             mPhoneNumberEditText.setText(phone);
+            mImageView.setImageBitmap(img);
 
         }
     }

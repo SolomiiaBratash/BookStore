@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".EditorActivity">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="158dp">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/ivImage"
+            android:src="@drawable/ic_book_black_24dp"
+
+            android:layout_width="100dp"
+            android:layout_height="150dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </android.support.constraint.ConstraintLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -156,6 +178,18 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+        <ImageButton
+            android:id="@+id/button_phone"
+            android:layout_width="@dimen/button"
+            android:layout_height="@dimen/button"
+            android:layout_marginLeft="@dimen/small_margin"
+            android:layout_marginRight="@dimen/margin"
+            android:layout_marginTop="@dimen/small_margin"
+            android:layout_gravity="center_vertical"
+            android:scaleType="fitCenter"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_action_phone"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -168,23 +202,42 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin"
-            android:layout_marginRight="@dimen/margin"
+            android:layout_marginLeft="@dimen/small_margin"
+            android:layout_marginRight="@dimen/small_margin"
             android:layout_marginTop="@dimen/small_margin"
             android:id="@+id/edit_phone_number"
             android:hint="phone number"
             android:inputType="number" />
 
-        <ImageButton
-            android:id="@+id/button_phone"
-            android:layout_width="@dimen/button"
-            android:layout_height="@dimen/button"
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/margin"
             android:layout_marginRight="@dimen/margin"
             android:layout_marginTop="@dimen/small_margin"
+            android:textColor="@color/colorAccent"
+            android:text="Photo"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnMakePhoto"
+            android:layout_marginLeft="@dimen/margin"
+            android:layout_marginRight="@dimen/margin"
+            android:layout_marginTop="4dp"
             android:layout_gravity="center_vertical"
             android:scaleType="fitCenter"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_action_phone"/>
+            android:src="@drawable/ic_add_a_photo_black_24dp"/>
+
     </LinearLayout>
+
 </LinearLayout>
